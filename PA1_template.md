@@ -46,7 +46,7 @@ actsum<-ddply(data, "date", summarize,
 hist(actsum$steps,breaks=10)
 ```
 
-![](PA1_template_files/figure-html/mean total-1.png)<!-- -->
+![](PA1_template_files/figure-html/meantotal-1.png)<!-- -->
 
 ```r
 mean_steps<-mean(actsum$steps,na.rm=TRUE)
@@ -75,7 +75,7 @@ plot(dailypatt,type="l",
      ylab="Average number of steps")
 ```
 
-![](PA1_template_files/figure-html/avg patter-1.png)<!-- -->
+![](PA1_template_files/figure-html/avgpatter-1.png)<!-- -->
 
 ```r
 max<-dailypatt[which.max(dailypatt$steps),]
@@ -136,7 +136,7 @@ actsum_filled<-actsum_filled[complete.cases(actsum_filled),]
 hist(actsum_filled$steps,breaks=10)
 ```
 
-![](PA1_template_files/figure-html/new data-1.png)<!-- -->
+![](PA1_template_files/figure-html/newdata-1.png)<!-- -->
 
 ```r
 newmean_steps<-mean(actsum_filled$steps)

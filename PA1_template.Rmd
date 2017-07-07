@@ -26,7 +26,7 @@ data$date<-as.Date(data$date)
 
 ## What is mean total number of steps taken per day?
 
-```{r mean total}
+```{r meantotal}
 actsum<-ddply(data, "date", summarize, 
               steps=sum(steps),
               interval=sum(interval))
@@ -44,7 +44,7 @@ cat("Mean:",mean_steps,
 
 ## What is the average daily activity pattern?
 
-```{r avg patter}
+```{r avgpatter}
 dailypatt<-aggregate(steps~interval,
                      data=data,
                      FUN=mean)
@@ -89,7 +89,7 @@ cat("Total number of missing values:",sum(NAs))
 
 ### New data histogram, mean and median
 
-```{r new data}
+```{r newdata}
 
 
 actsum_filled<-ddply(data_filled, "date", summarize, 
