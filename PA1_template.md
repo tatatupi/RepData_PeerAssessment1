@@ -1,50 +1,71 @@
----
-title: "Reproducible Research: Peer Assessment 1"
-output: 
-  html_document:
-    keep_md: true
----
+# Reproducible Research: Peer Assessment 1
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+
+
+
+```r
+library(plyr)
 ```
 
-```{r libraries}
-library(plyr)
+```
+## Warning: package 'plyr' was built under R version 3.3.3
 ```
 
 
 ## Loading and preprocessing the data
 
-```{r reading data}
+
+```r
 data<-read.csv("activity.csv",sep = ",", header = TRUE)
 summary(data)
+```
 
+```
+##      steps                date          interval     
+##  Min.   :  0.00   2012-10-01:  288   Min.   :   0.0  
+##  1st Qu.:  0.00   2012-10-02:  288   1st Qu.: 588.8  
+##  Median :  0.00   2012-10-03:  288   Median :1177.5  
+##  Mean   : 37.38   2012-10-04:  288   Mean   :1177.5  
+##  3rd Qu.: 12.00   2012-10-05:  288   3rd Qu.:1766.2  
+##  Max.   :806.00   2012-10-06:  288   Max.   :2355.0  
+##  NA's   :2304     (Other)   :15840
+```
+
+```r
 data$date<-as.Date(data$date)
-
 ```
 
 ## What is mean total number of steps taken per day?
 
-```{r mean total}
+
+```r
 actsum<-ddply(data, "date", summarize, 
               steps=sum(steps),
               interval=sum(interval))
 
 hist(actsum$steps,breaks=10)
+```
 
+![](PA1_template_files/figure-html/mean total-1.png)<!-- -->
+
+```r
 mean_steps<-mean(actsum$steps,na.rm=TRUE)
 median_steps<-median(actsum$steps,na.rm=TRUE)
 
 cat("Mean:",mean_steps,
     "\nMedian:",median_steps)
-        
+```
+
+```
+## Mean: 10766.19 
+## Median: 10765
 ```
 
 
 ## What is the average daily activity pattern?
 
-```{r avg patter}
+
+```r
 dailypatt<-aggregate(steps~interval,
                      data=data,
                      FUN=mean)
@@ -52,12 +73,19 @@ dailypatt<-aggregate(steps~interval,
 plot(dailypatt,type="l",
      xlab="5-minute intervals",
      ylab="Average number of steps")
+```
 
+![](PA1_template_files/figure-html/avg patter-1.png)<!-- -->
+
+```r
 max<-dailypatt[which.max(dailypatt$steps),]
 
 cat("The 5-minute interval that contains, on average, the maximum number of steps is", max$interval,
     "with",max$steps,"steps")
+```
 
+```
+## The 5-minute interval that contains, on average, the maximum number of steps is 835 with 206.1698 steps
 ```
 
 
@@ -65,15 +93,20 @@ cat("The 5-minute interval that contains, on average, the maximum number of step
 
 ### Counting missing values
 
-```{r missing values}
+
+```r
 NAs<-is.na(data$steps)
 cat("Total number of missing values:",sum(NAs))
 ```
 
+```
+## Total number of missing values: 2304
+```
+
 ### Filling missing data
 
-```{r filling data}
 
+```r
 data_filled<-data
 
 for (i in 1:length(data$steps)) {
@@ -84,14 +117,16 @@ for (i in 1:length(data$steps)) {
 
 NAs<-is.na(data_filled$steps)
 cat("Total number of missing values:",sum(NAs))
+```
 
+```
+## Total number of missing values: 0
 ```
 
 ### New data histogram, mean and median
 
-```{r new data}
 
-
+```r
 actsum_filled<-ddply(data_filled, "date", summarize, 
               steps=sum(steps),
               interval=sum(interval))
@@ -99,7 +134,11 @@ actsum_filled<-ddply(data_filled, "date", summarize,
 actsum_filled<-actsum_filled[complete.cases(actsum_filled),]
 
 hist(actsum_filled$steps,breaks=10)
+```
 
+![](PA1_template_files/figure-html/new data-1.png)<!-- -->
+
+```r
 newmean_steps<-mean(actsum_filled$steps)
 newmedian_steps<-median(actsum_filled$steps)
 
@@ -107,7 +146,15 @@ cat("New mean:",newmean_steps,
     "\nOld mean:",mean_steps,
     "\n\n\nNew Median",newmedian_steps,
     "\nOld Median:",median_steps)
+```
 
+```
+## New mean: 10766.19 
+## Old mean: 10766.19 
+## 
+## 
+## New Median 10766.19 
+## Old Median: 10765
 ```
 
 
@@ -116,8 +163,8 @@ By filling the missing data with the average number of steps for that 5-minute i
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
-```{r weekday factor}
 
+```r
 for (i in 1:length(data_filled$steps)) {
         if (weekdays(data_filled[i,2])=="sábado") {
                 data_filled$day[i]<-"weekend"
@@ -127,11 +174,10 @@ for (i in 1:length(data_filled$steps)) {
                 data_filled$day[i]<-"weekday"
         }
 }
-
 ```
 
-```{r plot}
 
+```r
 weekday<-data_filled[which(data_filled$day=="weekday"),]
 weekend<-data_filled[which(data_filled$day=="weekend"),]
 
@@ -151,5 +197,6 @@ plot(weekdaypatt,type="l",
 plot(weekendpatt,type="l",
      xlab="5-minute intervals",
      ylab="Avg # of steps Weekend")
-
 ```
+
+![](PA1_template_files/figure-html/plot-1.png)<!-- -->
